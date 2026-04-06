@@ -17,12 +17,12 @@
         .modal.active { display: flex; }
     </style>
 </head>
-<body class="transition-colors duration-300 bg-slate-900 text-white min-h-screen font-sans">
+<body class="transition-colors duration-300 bg-slate-900 text-white min-h-screen font-sans select-none">
 
     <div id="winnerModal" class="modal">
         <div class="bg-slate-800 w-full max-w-sm p-8 rounded-[2.5rem] text-center shadow-2xl border border-yellow-500/50">
             <h2 class="text-6xl mb-4">💰</h2>
-            <h3 class="text-2xl font-black text-yellow-500 uppercase italic italic" id="wName">WINNER TAKES ALL</h3>
+            <h3 class="text-2xl font-black text-yellow-500 uppercase italic" id="wName">WINNER TAKES ALL</h3>
             <div id="finalScores" class="space-y-3 my-6 text-left bg-slate-900 p-6 rounded-3xl border border-slate-700"></div>
             <button onclick="location.reload()" class="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-lg active:scale-95 transition">BACK TO PIT</button>
         </div>
@@ -31,7 +31,7 @@
     <div id="historyModal" class="modal">
         <div class="bg-slate-800 w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl border border-slate-700">
             <h3 id="histLabel" class="text-xl font-bold mb-4 text-yellow-500 italic">Match Log</h3>
-            <div id="histContent" class="space-y-3 mb-6"></div>
+            <div id="histContent" class="space-y-3 mb-6 max-h-60 overflow-y-auto"></div>
             <button onclick="document.getElementById('historyModal').classList.remove('active')" class="w-full bg-slate-700 py-4 rounded-2xl font-bold">CLOSE</button>
         </div>
     </div>
@@ -64,9 +64,12 @@
                 <span class="opacity-60 text-xs">READY YOUR CARDS</span>
             </button>
             <div class="bg-slate-800 p-6 rounded-[2rem] space-y-4 min-h-[300px] border border-slate-700">
-                <h3 class="font-black text-xs uppercase text-yellow-500 px-2 tracking-widest">Match Vault</h3>
+                <div class="flex justify-between items-center px-2">
+                    <h3 class="font-black text-xs uppercase text-yellow-500 tracking-widest">Match Vault</h3>
+                    <button onclick="if(auth.currentUser) fetchHistory(auth.currentUser.uid)" class="text-[10px] underline opacity-50">Refresh</button>
+                </div>
                 <div id="historyList" class="space-y-3">
-                    <p class="text-[10px] italic opacity-40 px-2">No history in the vault yet.</p>
+                    <p class="text-[10px] italic opacity-40 px-2">Loading vault...</p>
                 </div>
             </div>
         </div>
@@ -86,7 +89,7 @@
                     <option value="4">4</option><option value="8">8</option><option value="12">12</option>
                 </select>
             </div>
-            <button onclick="startMatch()" class="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-lg active:scale-95 transition text-lg">SHUFFLE & START</button>
+            <button onclick="startMatch()" class="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-lg active:scale-95 transition text-lg uppercase">Shuffle & Start</button>
         </div>
 
         <div id="page-game" class="page space-y-4">
@@ -102,18 +105,16 @@
                 <button id="actionBtn" onclick="handleStep()" class="w-full mt-6 bg-yellow-500 text-black font-black py-5 rounded-2xl transition-all active:scale-95 text-lg shadow-xl shadow-yellow-500/20 uppercase">CONFIRM</button>
             </div>
 
-            <div class="mt-4">
-                <div class="overflow-x-auto rounded-2xl border border-slate-700 shadow-sm bg-slate-800">
-                    <table class="w-full text-center text-[11px] table-fixed">
-                        <thead class="bg-slate-900/50 text-slate-500">
-                            <tr id="tableHeader"></tr>
-                        </thead>
-                        <tbody id="scoreBody"></tbody>
-                        <tfoot class="font-black bg-yellow-500 text-black">
-                            <tr id="tableFooter"></tr>
-                        </tfoot>
-                    </table>
-                </div>
+            <div class="mt-4 overflow-hidden rounded-2xl border border-slate-700 shadow-sm bg-slate-800">
+                <table class="w-full text-center text-[11px] table-fixed">
+                    <thead class="bg-slate-900/50 text-slate-500">
+                        <tr id="tableHeader"></tr>
+                    </thead>
+                    <tbody id="scoreBody"></tbody>
+                    <tfoot class="font-black bg-yellow-500 text-black">
+                        <tr id="tableFooter"></tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
@@ -135,7 +136,7 @@
         let scores = []; let totalRounds = 4; let currentRound = 1; let gameState = 'BIDDING'; let tempBids = [0,0,0,0];
 
         function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-        function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e => alert("Login Fail: " + e.message)); }
         function logout() { if(confirm("Sign Out?")) auth.signOut().then(()=>location.reload()); }
         function goBack() { auth.currentUser ? showPage('page-dashboard') : showPage('page-login'); }
 
@@ -150,16 +151,20 @@
 
         async function fetchHistory(uid) {
             const list = document.getElementById('historyList');
-            const snap = await db.collection('match_logs').doc(uid).get();
-            if(snap.exists) {
-                const logs = snap.data().matches || [];
-                if(logs.length > 0) {
-                    list.innerHTML = logs.reverse().map(m => `
-                        <div onclick='viewHistDetail(${JSON.stringify(m)})' class="bg-slate-900 border border-slate-700 p-4 rounded-2xl flex justify-between items-center text-[10px] font-black active:scale-95 transition cursor-pointer">
-                            <div class="flex flex-col"><span class="text-yellow-500 uppercase">${m.label}</span><span class="opacity-40">${m.winner} WON</span></div>
-                            <span class="bg-yellow-500 text-black px-2 py-1 rounded">VIEW</span>
-                        </div>`).join('');
-                }
+            try {
+                const snap = await db.collection('match_logs').doc(uid).get();
+                if(snap.exists) {
+                    const logs = snap.data().matches || [];
+                    if(logs.length > 0) {
+                        list.innerHTML = logs.slice().reverse().map((m, idx) => `
+                            <div onclick='viewHistDetail(${JSON.stringify(m)})' class="bg-slate-900 border border-slate-700 p-4 rounded-2xl flex justify-between items-center text-[10px] font-black active:scale-95 transition cursor-pointer">
+                                <div class="flex flex-col"><span class="text-yellow-500 uppercase">${m.label}</span><span class="opacity-40">${m.winner} WON</span></div>
+                                <span class="bg-yellow-500 text-black px-2 py-1 rounded">VIEW</span>
+                            </div>`).join('');
+                    } else { list.innerHTML = "<p class='text-xs opacity-30 px-2 font-bold'>The vault is empty.</p>"; }
+                } else { list.innerHTML = "<p class='text-xs opacity-30 px-2 font-bold'>No history found.</p>"; }
+            } catch(e) {
+                list.innerHTML = `<p class='text-red-500 text-[10px]'>DB Error: Ensure Firestore rules are set to Test Mode.</p>`;
             }
         }
 
@@ -174,7 +179,7 @@
         }
 
         function startMatch() {
-            for(let i=0; i<4; i++) players[i] = document.getElementById('n'+i).value.trim() || `P${i+1}`;
+            for(let i=0; i<4; i++) players[i] = document.getElementById('n0' + i)?.value?.trim() || document.getElementById('n'+i)?.value?.trim() || `P${i+1}`;
             totalRounds = parseInt(document.getElementById('setupRounds').value);
             scores = []; currentRound = 1; gameState = 'BIDDING';
             renderUI(); showPage('page-game');
@@ -191,10 +196,10 @@
             const err = document.getElementById('errorMsg');
 
             if(gameState === 'BIDDING') {
-                if(sum <= 8) { err.innerText = `⚠️ REDEAL: Sum ${sum} is too safe!`; err.classList.remove('hidden'); return; }
+                if(sum <= 8) { err.innerText = `⚠️ Sum ${sum} is too low!`; err.classList.remove('hidden'); return; }
                 tempBids = vals; gameState = 'SCORING'; err.classList.add('hidden');
             } else {
-                if(sum !== 13) { err.innerText = `⚠️ CHEAT CHECK: Total must be 13! (You: ${sum})`; err.classList.remove('hidden'); return; }
+                if(sum !== 13) { err.innerText = `⚠️ Total must be 13! (You: ${sum})`; err.classList.remove('hidden'); return; }
                 const pts = vals.map((v, i) => (v >= tempBids[i]) ? (tempBids[i] + (v - tempBids[i]) * 0.1) : (-tempBids[i]));
                 scores.push({ pts });
                 err.classList.add('hidden');
@@ -210,22 +215,23 @@
             let winIdx = totals.indexOf(Math.max(...totals));
             
             if(auth.currentUser) {
-                const uid = auth.currentUser.uid;
-                const today = new Date().toLocaleDateString('en-GB');
-                const snap = await db.collection('match_logs').doc(uid).get();
-                let matches = snap.exists ? snap.data().matches : [];
-                let matchCountToday = matches.filter(m => m.date === today).length + 1;
-                
-                const matchData = { 
-                    label: `${today}-M${matchCountToday}`,
-                    date: today,
-                    winner: players[winIdx],
-                    players: players,
-                    totals: formattedTotals,
-                    timestamp: Date.now()
-                };
-                
-                await db.collection('match_logs').doc(uid).set({ matches: firebase.firestore.FieldValue.arrayUnion(matchData) }, { merge: true });
+                try {
+                    const uid = auth.currentUser.uid;
+                    const today = new Date().toLocaleDateString('en-GB');
+                    const snap = await db.collection('match_logs').doc(uid).get();
+                    let matches = snap.exists ? (snap.data().matches || []) : [];
+                    let matchCountToday = matches.filter(m => m.date === today).length + 1;
+                    
+                    const matchData = { 
+                        label: `${today}-M${matchCountToday}`,
+                        date: today,
+                        winner: players[winIdx],
+                        players: players,
+                        totals: formattedTotals,
+                        timestamp: Date.now()
+                    };
+                    await db.collection('match_logs').doc(uid).set({ matches: firebase.firestore.FieldValue.arrayUnion(matchData) }, { merge: true });
+                } catch(e) { alert("Save Error: " + e.message); }
             }
 
             document.getElementById('wName').innerText = `${players[winIdx]} CLEANS UP!`;
@@ -250,7 +256,7 @@
             }
             document.getElementById('roundCounter').innerText = `Round ${currentRound}/${totalRounds}`;
             document.getElementById('roundMode').innerText = gameState;
-            document.getElementById('actionBtn').innerText = gameState === 'BIDDING' ? "CONFIRM BIDS" : "SAVE ROUND";
+            document.getElementById('actionBtn').innerText = gameState === 'BIDDING' ? "CONFIRM" : "SAVE";
             document.getElementById('actionBtn').className = `w-full mt-6 text-black font-black py-5 rounded-2xl transition-all ${gameState === 'BIDDING' ? 'bg-yellow-500' : 'bg-green-500'}`;
             renderTable();
         }
