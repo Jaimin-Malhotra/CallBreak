@@ -13,8 +13,6 @@
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .page { display: none; }
         .page.active { display: block; }
-        .table-fixed { table-layout: fixed; }
-        th, td { border: 1px solid rgba(156, 163, 175, 0.2); }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
         .modal.active { display: flex; }
     </style>
@@ -40,12 +38,9 @@
         </header>
 
         <div id="page-login" class="page active text-center space-y-12 pt-16">
-            <div class="space-y-2">
-                <h2 class="text-5xl font-black tracking-tighter">Callbreak</h2>
-                <p class="text-slate-400 font-medium">Professional Score Tracking</p>
-            </div>
+            <h2 class="text-5xl font-black tracking-tighter">Callbreak</h2>
             <div class="space-y-4 px-6">
-                <button onclick="login()" class="w-full bg-white text-black font-bold py-5 rounded-2xl shadow-xl flex items-center justify-center gap-3 hover:bg-slate-50 transition active:scale-95">
+                <button onclick="login()" class="w-full bg-white text-black font-bold py-5 rounded-2xl shadow-xl flex items-center justify-center gap-3 active:scale-95 transition">
                     <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                     Login with Google
                 </button>
@@ -54,35 +49,32 @@
         </div>
 
         <div id="page-dashboard" class="page space-y-4">
-            <button onclick="showPage('page-setup')" class="w-full bg-yellow-500 text-black p-8 rounded-[2rem] font-black text-left shadow-xl transform active:scale-95 transition">
-                <span class="block text-3xl italic">NEW MATCH</span>
-                <span class="opacity-60 text-xs uppercase font-bold">Start fresh session</span>
+            <button onclick="showPage('page-setup')" class="w-full bg-yellow-500 text-black p-8 rounded-[2rem] font-black text-left shadow-xl active:scale-95 transition">
+                <span class="block text-3xl italic uppercase">NEW MATCH</span>
             </button>
-            <div class="bg-slate-200 dark:bg-slate-800 p-6 rounded-[2rem] space-y-4">
-                <h3 class="font-bold text-sm uppercase opacity-50 px-2">Account History</h3>
-                <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto">
-                    <p class="text-xs italic opacity-40 px-2">No completed matches found.</p>
+            <div class="bg-slate-200 dark:bg-slate-800 p-6 rounded-[2rem] space-y-4 min-h-[200px]">
+                <h3 class="font-bold text-xs uppercase opacity-50 px-2 tracking-widest">History</h3>
+                <div id="historyList" class="space-y-2">
+                    <p class="text-[10px] italic opacity-40 px-2">No data yet.</p>
                 </div>
             </div>
         </div>
 
         <div id="page-setup" class="page bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-2xl space-y-6">
-            <h2 class="text-2xl font-black italic uppercase text-yellow-500">Setup Match</h2>
+            <h2 class="text-2xl font-black italic uppercase text-yellow-500">Setup</h2>
             <div class="space-y-3">
-                <input type="text" id="n0" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 1 Name">
-                <input type="text" id="n1" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 2 Name">
-                <input type="text" id="n2" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 3 Name">
-                <input type="text" id="n3" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 4 Name">
+                <input type="text" id="n0" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 1">
+                <input type="text" id="n1" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 2">
+                <input type="text" id="n2" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 3">
+                <input type="text" id="n3" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 4">
             </div>
             <div>
-                <label class="text-[10px] font-black uppercase opacity-40 ml-2 mb-1 block">Game Length</label>
-                <select id="setupRounds" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl appearance-none font-bold">
-                    <option value="4">4 Rounds (Standard)</option>
-                    <option value="8">8 Rounds (Long)</option>
-                    <option value="12">12 Rounds (Marathon)</option>
+                <label class="text-[10px] font-black uppercase opacity-40 ml-2 mb-1 block">Rounds</label>
+                <select id="setupRounds" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl font-bold">
+                    <option value="4">4</option><option value="8">8</option><option value="12">12</option>
                 </select>
             </div>
-            <button onclick="startMatch()" class="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-lg active:scale-95 transition text-lg">START GAME</button>
+            <button onclick="startMatch()" class="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-lg active:scale-95 transition text-lg">START</button>
         </div>
 
         <div id="page-game" class="page space-y-4">
@@ -95,14 +87,14 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-2xl border border-slate-200 dark:border-slate-700">
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-2xl">
                 <h2 id="roundMode" class="text-center font-black text-yellow-500 mb-6 uppercase tracking-[0.2em] text-xs">BIDDING</h2>
                 <div id="inputGroup" class="grid grid-cols-2 gap-4"></div>
-                <p id="errorMsg" class="text-red-500 text-[10px] text-center mt-4 font-black hidden uppercase italic"></p>
-                <button id="actionBtn" onclick="handleStep()" class="w-full mt-6 bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-xl transition-all active:scale-95 text-lg">CONFIRM</button>
+                <p id="errorMsg" class="text-red-500 text-[10px] text-center mt-4 font-black hidden uppercase"></p>
+                <button id="actionBtn" onclick="handleStep()" class="w-full mt-6 bg-yellow-500 text-black font-black py-5 rounded-2xl transition-all active:scale-95 text-lg shadow-xl shadow-yellow-500/20">CONFIRM</button>
             </div>
 
-            <div class="mt-6 px-1">
+            <div class="mt-6">
                 <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
                     <table class="w-full text-center text-[11px] table-fixed bg-white dark:bg-slate-800">
                         <thead class="bg-slate-50 dark:bg-slate-700/50">
@@ -150,28 +142,24 @@
 
         async function fetchHistory(uid) {
             const list = document.getElementById('historyList');
-            const snap = await db.collection('completed_games').where('uid', '==', uid).orderBy('timestamp', 'desc').limit(5).get();
-            if(!snap.empty) {
-                list.innerHTML = snap.docs.map(doc => {
-                    const d = doc.data();
-                    return `<div class="bg-white dark:bg-slate-700 p-3 rounded-xl flex justify-between items-center text-[10px] font-bold">
-                        <span class="truncate w-24 opacity-60">${d.players.join(', ')}</span>
-                        <span class="text-yellow-500">${new Date(d.timestamp).toLocaleDateString()}</span>
-                    </div>`;
-                }).join('');
+            const snap = await db.collection('user_history').doc(uid).get();
+            if(snap.exists) {
+                const logs = snap.data().matches || [];
+                if(logs.length > 0) {
+                    list.innerHTML = logs.reverse().slice(0, 5).map(m => `
+                        <div class="bg-white dark:bg-slate-700/50 p-4 rounded-2xl flex justify-between items-center text-[10px] font-bold border border-slate-100 dark:border-slate-600">
+                            <div class="flex flex-col"><span class="text-yellow-500 uppercase">${m.winner} WINS</span><span class="opacity-40 font-medium">${m.date}</span></div>
+                            <div class="text-right text-[9px] opacity-60">Sum: ${m.totalScore}</div>
+                        </div>`).join('');
+                }
             }
         }
 
         function startMatch() {
-            // Fresh start
-            for(let i=0; i<4; i++) {
-                const n = document.getElementById('n'+i).value.trim();
-                players[i] = n || `Player ${i+1}`;
-            }
+            for(let i=0; i<4; i++) players[i] = document.getElementById('n'+i).value.trim() || `P${i+1}`;
             totalRounds = parseInt(document.getElementById('setupRounds').value);
             scores = []; currentRound = 1; gameState = 'BIDDING';
-            renderUI(); 
-            showPage('page-game');
+            renderUI(); showPage('page-game');
         }
 
         function handleStep() {
@@ -185,12 +173,12 @@
             const err = document.getElementById('errorMsg');
 
             if(gameState === 'BIDDING') {
-                if(sum <= 8) { err.innerText = `⚠️ RE-DEAL: Total bids ${sum} is too low.`; err.classList.remove('hidden'); return; }
+                if(sum <= 8) { err.innerText = `⚠️ Sum ${sum} <= 8 - Re-deal!`; err.classList.remove('hidden'); return; }
                 tempBids = vals; gameState = 'SCORING'; err.classList.add('hidden');
             } else {
-                if(sum !== 13) { err.innerText = `⚠️ ERROR: Sum must be 13 (You entered ${sum}).`; err.classList.remove('hidden'); return; }
+                if(sum !== 13) { err.innerText = `⚠️ Total must be 13! (You: ${sum})`; err.classList.remove('hidden'); return; }
                 const pts = vals.map((v, i) => (v >= tempBids[i]) ? (tempBids[i] + (v - tempBids[i]) * 0.1) : (-tempBids[i]));
-                scores.push({ bids: [...tempBids], made: vals, pts });
+                scores.push({ pts });
                 if(currentRound >= totalRounds) { finalizeGame(); return; }
                 currentRound++; gameState = 'BIDDING';
             }
@@ -199,20 +187,19 @@
 
         async function finalizeGame() {
             const totals = [0,0,0,0]; scores.forEach(r => r.pts.forEach((p, idx) => totals[idx] += p));
-            let winnerIdx = totals.indexOf(Math.max(...totals));
+            let winIdx = totals.indexOf(Math.max(...totals));
             
-            // Save to permanent history if logged in
             if(auth.currentUser) {
-                await db.collection('completed_games').add({
-                    uid: auth.currentUser.uid,
-                    players, totals, timestamp: Date.now()
-                });
+                const uid = auth.currentUser.uid;
+                const matchData = { winner: players[winIdx], totalScore: totals[winIdx].toFixed(1), date: new Date().toLocaleDateString(), timestamp: Date.now() };
+                const ref = db.collection('user_history').doc(uid);
+                await ref.set({ matches: firebase.firestore.FieldValue.arrayUnion(matchData) }, { merge: true });
             }
 
-            document.getElementById('wName').innerText = `${players[winnerIdx]} WINS!`;
+            document.getElementById('wName').innerText = `${players[winIdx]} WINS!`;
             document.getElementById('finalScores').innerHTML = players.map((p, i) => `
                 <div class="flex justify-between font-bold text-sm">
-                    <span class="opacity-70">${p}</span><span>${totals[i].toFixed(1)}</span>
+                    <span class="opacity-60 uppercase tracking-tighter">${p}</span><span>${totals[i].toFixed(1)}</span>
                 </div>`).join('');
             document.getElementById('winnerModal').classList.add('active');
         }
@@ -223,15 +210,16 @@
             group.innerHTML = '';
             for(let i=0; i<4; i++) {
                 const pIdx = (sIdx + i) % 4;
+                const bidTxt = gameState === 'SCORING' ? `<span class="text-yellow-500 ml-1">(${tempBids[pIdx]})</span>` : '';
                 group.innerHTML += `<div class="text-center">
-                    <label class="text-[10px] font-black block truncate mb-1 ${i===0 ? 'text-yellow-500' : 'opacity-30'}">${players[pIdx]} ${i===0?'★':''}</label>
-                    <input type="number" id="in${pIdx}" class="w-full text-center text-2xl font-black bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-yellow-500 transition">
+                    <label class="text-[10px] font-black block truncate mb-1 ${i===0 ? 'text-yellow-500' : 'opacity-30'}">${players[pIdx]} ${i===0?'★':''}${bidTxt}</label>
+                    <input type="number" id="in${pIdx}" class="w-full text-center text-2xl font-black bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500 transition">
                 </div>`;
             }
             document.getElementById('roundCounter').innerText = `Round ${currentRound}/${totalRounds}`;
             document.getElementById('roundMode').innerText = gameState;
-            document.getElementById('actionBtn').innerText = gameState === 'BIDDING' ? "CONFIRM BIDS" : "SAVE ROUND";
-            document.getElementById('actionBtn').className = `w-full mt-6 text-black font-black py-5 rounded-2xl shadow-xl transition-all ${gameState === 'BIDDING' ? 'bg-yellow-500' : 'bg-green-500 shadow-green-500/20'}`;
+            document.getElementById('actionBtn').innerText = gameState === 'BIDDING' ? "CONFIRM" : "SAVE";
+            document.getElementById('actionBtn').className = `w-full mt-6 text-black font-black py-5 rounded-2xl transition-all ${gameState === 'BIDDING' ? 'bg-yellow-500' : 'bg-green-500 shadow-green-500/20'}`;
             renderTable();
         }
 
@@ -241,6 +229,7 @@
             body.innerHTML = scores.map((r, i) => `<tr><td class="bg-slate-50 dark:bg-slate-700/50 font-black italic">${i+1}</td>${r.pts.map(p => `<td class="font-bold ${p<0?'text-red-500':''}">${p.toFixed(1)}</td>`).join('')}</tr>`).join('');
             const totals = [0,0,0,0]; scores.forEach(r => r.pts.forEach((p, idx) => totals[idx] += p));
             document.getElementById('tableFooter').innerHTML = `<td class="p-3">TTL</td>` + totals.map(t => `<td class="p-3">${t.toFixed(1)}</td>`).join('');
+            [0,1,2,3].forEach(n => { if(document.getElementById('in'+n)) document.getElementById('in'+n).value = ""; });
         }
 
         function updateLimit(v) { if(parseInt(v) >= currentRound) { totalRounds = parseInt(v); renderUI(); } }
