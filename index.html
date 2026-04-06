@@ -15,71 +15,78 @@
         .page.active { display: block; }
         .table-fixed { table-layout: fixed; }
         th, td { border: 1px solid rgba(156, 163, 175, 0.2); }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
         .modal.active { display: flex; }
     </style>
 </head>
 <body class="transition-colors duration-300 bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-white min-h-screen font-sans">
 
     <div id="winnerModal" class="modal">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-sm p-8 rounded-3xl text-center shadow-2xl">
-            <h2 class="text-4xl mb-2">🏆</h2>
-            <h3 class="text-2xl font-black text-yellow-500 uppercase tracking-tighter" id="wName">PLAYER 1 WINS!</h3>
-            <p class="text-sm opacity-60 mb-6">Match successfully completed.</p>
-            <div id="finalScores" class="space-y-2 mb-8 text-left"></div>
-            <button onclick="location.reload()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl shadow-lg">BACK TO MENU</button>
+        <div class="bg-white dark:bg-slate-800 w-full max-w-sm p-8 rounded-3xl text-center shadow-2xl border border-yellow-500/30">
+            <h2 class="text-5xl mb-4">👑</h2>
+            <h3 class="text-2xl font-black text-yellow-500 uppercase italic" id="wName">WINNER!</h3>
+            <div id="finalScores" class="space-y-3 my-6 text-left bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl"></div>
+            <button onclick="location.reload()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl shadow-lg active:scale-95 transition">EXIT TO MENU</button>
         </div>
     </div>
 
     <div class="max-w-md mx-auto p-4 pb-24">
         <header class="flex justify-between items-center py-4 mb-4">
-            <h1 class="text-xl font-black italic text-yellow-500 uppercase">CALLBREAK <span class="text-slate-400">PRO</span></h1>
+            <h1 class="text-xl font-black italic text-yellow-500 uppercase tracking-tighter">CALLBREAK <span class="text-slate-400">PRO</span></h1>
             <div class="flex items-center gap-3">
                 <button onclick="toggleTheme()" class="p-2 rounded-full bg-slate-200 dark:bg-slate-800">🌓</button>
-                <div id="userAvatar" class="hidden"><img id="userPic" onclick="logout()" class="w-8 h-8 rounded-full border-2 border-yellow-500 cursor-pointer"></div>
+                <div id="userAvatar" class="hidden"><img id="userPic" onclick="logout()" class="w-10 h-10 rounded-full border-2 border-yellow-500 cursor-pointer shadow-lg"></div>
             </div>
         </header>
 
-        <div id="page-login" class="page active text-center space-y-8 pt-20">
-            <h2 class="text-4xl font-black">Callbreak Pro</h2>
+        <div id="page-login" class="page active text-center space-y-12 pt-16">
+            <div class="space-y-2">
+                <h2 class="text-5xl font-black tracking-tighter">Callbreak</h2>
+                <p class="text-slate-400 font-medium">Professional Score Tracking</p>
+            </div>
             <div class="space-y-4 px-6">
-                <button onclick="login()" class="w-full bg-white text-black font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-3 hover:bg-slate-50 transition">
+                <button onclick="login()" class="w-full bg-white text-black font-bold py-5 rounded-2xl shadow-xl flex items-center justify-center gap-3 hover:bg-slate-50 transition active:scale-95">
                     <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                     Login with Google
                 </button>
-                <button onclick="showPage('page-setup')" class="text-slate-500 underline text-sm font-medium">Play as Guest</button>
+                <button onclick="showPage('page-setup')" class="text-slate-500 underline text-sm font-bold">PLAY AS GUEST</button>
             </div>
         </div>
 
         <div id="page-dashboard" class="page space-y-4">
-            <button onclick="showPage('page-setup')" class="w-full bg-yellow-500 text-black p-6 rounded-3xl font-black text-left shadow-lg">
-                <span class="block text-2xl">NEW MATCH</span>
+            <button onclick="showPage('page-setup')" class="w-full bg-yellow-500 text-black p-8 rounded-[2rem] font-black text-left shadow-xl transform active:scale-95 transition">
+                <span class="block text-3xl italic">NEW MATCH</span>
+                <span class="opacity-60 text-xs uppercase font-bold">Start fresh session</span>
             </button>
-            <button onclick="loadHistory()" class="w-full bg-slate-200 dark:bg-slate-800 p-6 rounded-3xl font-bold text-left border border-transparent hover:border-yellow-500/50 transition">
-                <span class="block text-xl uppercase italic">RESUME MATCH</span>
-                <p id="histDetail" class="text-xs opacity-50">Checking for saves...</p>
-            </button>
+            <div class="bg-slate-200 dark:bg-slate-800 p-6 rounded-[2rem] space-y-4">
+                <h3 class="font-bold text-sm uppercase opacity-50 px-2">Account History</h3>
+                <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto">
+                    <p class="text-xs italic opacity-40 px-2">No completed matches found.</p>
+                </div>
+            </div>
         </div>
 
-        <div id="page-setup" class="page bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl space-y-4">
-            <h2 class="text-xl font-bold">Player Names</h2>
-            <div class="space-y-2">
-                <input type="text" id="n0" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl outline-none" placeholder="Player 1">
-                <input type="text" id="n1" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl outline-none" placeholder="Player 2">
-                <input type="text" id="n2" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl outline-none" placeholder="Player 3">
-                <input type="text" id="n3" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl outline-none" placeholder="Player 4">
+        <div id="page-setup" class="page bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-2xl space-y-6">
+            <h2 class="text-2xl font-black italic uppercase text-yellow-500">Setup Match</h2>
+            <div class="space-y-3">
+                <input type="text" id="n0" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 1 Name">
+                <input type="text" id="n1" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 2 Name">
+                <input type="text" id="n2" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 3 Name">
+                <input type="text" id="n3" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 4 Name">
             </div>
             <div>
-                <label class="text-[10px] font-bold uppercase opacity-50 ml-1">Total Rounds</label>
-                <select id="setupRounds" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl">
-                    <option value="4">4 Rounds</option><option value="8">8 Rounds</option><option value="12">12 Rounds</option>
+                <label class="text-[10px] font-black uppercase opacity-40 ml-2 mb-1 block">Game Length</label>
+                <select id="setupRounds" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl appearance-none font-bold">
+                    <option value="4">4 Rounds (Standard)</option>
+                    <option value="8">8 Rounds (Long)</option>
+                    <option value="12">12 Rounds (Marathon)</option>
                 </select>
             </div>
-            <button onclick="startMatch()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl shadow-lg active:scale-95 transition">START MATCH</button>
+            <button onclick="startMatch()" class="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-lg active:scale-95 transition text-lg">START GAME</button>
         </div>
 
         <div id="page-game" class="page space-y-4">
-            <div class="flex justify-between items-center text-xs font-bold uppercase opacity-60">
+            <div class="flex justify-between items-center text-[10px] font-black uppercase opacity-40 tracking-widest px-2">
                 <span id="roundCounter">Round 1/4</span>
                 <div class="flex items-center gap-2">Limit:
                     <select id="gameLimit" onchange="updateLimit(this.value)" class="bg-transparent border-b border-yellow-500 outline-none">
@@ -88,22 +95,21 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-xl">
-                <h2 id="roundMode" class="text-center font-black text-yellow-500 mb-4 uppercase tracking-widest text-sm">BIDDING</h2>
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-2xl border border-slate-200 dark:border-slate-700">
+                <h2 id="roundMode" class="text-center font-black text-yellow-500 mb-6 uppercase tracking-[0.2em] text-xs">BIDDING</h2>
                 <div id="inputGroup" class="grid grid-cols-2 gap-4"></div>
-                <p id="errorMsg" class="text-red-500 text-[10px] text-center mt-3 font-bold hidden"></p>
-                <button id="actionBtn" onclick="handleStep()" class="w-full mt-5 bg-yellow-500 text-black font-black py-4 rounded-2xl shadow-md transition-all active:scale-95">CONFIRM</button>
+                <p id="errorMsg" class="text-red-500 text-[10px] text-center mt-4 font-black hidden uppercase italic"></p>
+                <button id="actionBtn" onclick="handleStep()" class="w-full mt-6 bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-xl transition-all active:scale-95 text-lg">CONFIRM</button>
             </div>
 
-            <div class="mt-4">
-                <h3 class="text-xs font-bold mb-2 opacity-50 uppercase tracking-tighter">Score Tablet</h3>
-                <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
-                    <table class="w-full text-center text-[10px] table-fixed bg-white dark:bg-slate-800">
-                        <thead class="bg-slate-100 dark:bg-slate-700">
-                            <tr id="tableHeader"></tr>
+            <div class="mt-6 px-1">
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <table class="w-full text-center text-[11px] table-fixed bg-white dark:bg-slate-800">
+                        <thead class="bg-slate-50 dark:bg-slate-700/50">
+                            <tr id="tableHeader" class="text-slate-400"></tr>
                         </thead>
                         <tbody id="scoreBody"></tbody>
-                        <tfoot class="font-bold bg-yellow-500 text-black">
+                        <tfoot class="font-black bg-yellow-500 text-black">
                             <tr id="tableFooter"></tr>
                         </tfoot>
                     </table>
@@ -126,15 +132,10 @@
         const db = firebase.firestore();
 
         let players = ["P1", "P2", "P3", "P4"];
-        let scores = []; 
-        let totalRounds = 4;
-        let currentRound = 1;
-        let gameState = 'BIDDING'; 
-        let tempBids = [0,0,0,0];
+        let scores = []; let totalRounds = 4; let currentRound = 1; let gameState = 'BIDDING'; let tempBids = [0,0,0,0];
 
         function toggleTheme() { document.documentElement.classList.toggle('dark'); }
         function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-
         function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         function logout() { if(confirm("Logout?")) auth.signOut().then(()=>location.reload()); }
 
@@ -143,29 +144,32 @@
                 document.getElementById('userAvatar').classList.remove('hidden');
                 document.getElementById('userPic').src = user.photoURL;
                 showPage('page-dashboard');
-                checkRecentHistory(user.uid);
+                fetchHistory(user.uid);
             }
         });
 
-        async function checkRecentHistory(uid) {
-            try {
-                const doc = await db.collection('games').doc(uid).get();
-                if(doc.exists) document.getElementById('histDetail').innerText = "RESUME: Round " + doc.data().currentRound;
-                else document.getElementById('histDetail').innerText = "No saved games found";
-            } catch(e) { console.error(e); }
+        async function fetchHistory(uid) {
+            const list = document.getElementById('historyList');
+            const snap = await db.collection('completed_games').where('uid', '==', uid).orderBy('timestamp', 'desc').limit(5).get();
+            if(!snap.empty) {
+                list.innerHTML = snap.docs.map(doc => {
+                    const d = doc.data();
+                    return `<div class="bg-white dark:bg-slate-700 p-3 rounded-xl flex justify-between items-center text-[10px] font-bold">
+                        <span class="truncate w-24 opacity-60">${d.players.join(', ')}</span>
+                        <span class="text-yellow-500">${new Date(d.timestamp).toLocaleDateString()}</span>
+                    </div>`;
+                }).join('');
+            }
         }
 
-        async function startMatch() {
+        function startMatch() {
+            // Fresh start
             for(let i=0; i<4; i++) {
                 const n = document.getElementById('n'+i).value.trim();
-                players[i] = n || `P${i+1}`;
+                players[i] = n || `Player ${i+1}`;
             }
             totalRounds = parseInt(document.getElementById('setupRounds').value);
             scores = []; currentRound = 1; gameState = 'BIDDING';
-            
-            // Critical Fix for Login mode starting
-            if(auth.currentUser) await saveMatch(); 
-            
             renderUI(); 
             showPage('page-game');
         }
@@ -177,36 +181,39 @@
                 const pIdx = (sIdx + i) % 4;
                 vals[pIdx] = parseInt(document.getElementById('in'+pIdx).value) || 0;
             }
-
             const sum = vals.reduce((a,b)=>a+b, 0);
             const err = document.getElementById('errorMsg');
 
             if(gameState === 'BIDDING') {
-                if(sum <= 8) { err.innerText = `RE-DEAL: Total call ${sum} is too low.`; err.classList.remove('hidden'); return; }
+                if(sum <= 8) { err.innerText = `⚠️ RE-DEAL: Total bids ${sum} is too low.`; err.classList.remove('hidden'); return; }
                 tempBids = vals; gameState = 'SCORING'; err.classList.add('hidden');
             } else {
-                if(sum !== 13) { err.innerText = `ERROR: Total hands must be 13 (Got ${sum}).`; err.classList.remove('hidden'); return; }
+                if(sum !== 13) { err.innerText = `⚠️ ERROR: Sum must be 13 (You entered ${sum}).`; err.classList.remove('hidden'); return; }
                 const pts = vals.map((v, i) => (v >= tempBids[i]) ? (tempBids[i] + (v - tempBids[i]) * 0.1) : (-tempBids[i]));
                 scores.push({ bids: [...tempBids], made: vals, pts });
-                saveMatch();
-                if(currentRound >= totalRounds) { showWinner(); return; }
+                if(currentRound >= totalRounds) { finalizeGame(); return; }
                 currentRound++; gameState = 'BIDDING';
             }
             renderUI();
         }
 
-        function showWinner() {
-            const totals = [0,0,0,0];
-            scores.forEach(r => r.pts.forEach((p, idx) => totals[idx] += p));
-            let max = Math.max(...totals);
-            let winnerIdx = totals.indexOf(max);
+        async function finalizeGame() {
+            const totals = [0,0,0,0]; scores.forEach(r => r.pts.forEach((p, idx) => totals[idx] += p));
+            let winnerIdx = totals.indexOf(Math.max(...totals));
             
+            // Save to permanent history if logged in
+            if(auth.currentUser) {
+                await db.collection('completed_games').add({
+                    uid: auth.currentUser.uid,
+                    players, totals, timestamp: Date.now()
+                });
+            }
+
             document.getElementById('wName').innerText = `${players[winnerIdx]} WINS!`;
             document.getElementById('finalScores').innerHTML = players.map((p, i) => `
-                <div class="flex justify-between border-b border-slate-700/20 pb-1">
-                    <span>${p}</span><span class="font-bold">${totals[i].toFixed(1)}</span>
-                </div>
-            `).join('');
+                <div class="flex justify-between font-bold text-sm">
+                    <span class="opacity-70">${p}</span><span>${totals[i].toFixed(1)}</span>
+                </div>`).join('');
             document.getElementById('winnerModal').classList.add('active');
         }
 
@@ -217,43 +224,23 @@
             for(let i=0; i<4; i++) {
                 const pIdx = (sIdx + i) % 4;
                 group.innerHTML += `<div class="text-center">
-                    <label class="text-[10px] font-bold block truncate ${i===0 ? 'text-yellow-500' : 'opacity-50'}">${players[pIdx]} ${i===0?'★':''}</label>
-                    <input type="number" id="in${pIdx}" class="w-full text-center text-xl font-bold bg-slate-100 dark:bg-slate-700 p-3 rounded-xl outline-none border-2 border-transparent focus:border-yellow-500">
+                    <label class="text-[10px] font-black block truncate mb-1 ${i===0 ? 'text-yellow-500' : 'opacity-30'}">${players[pIdx]} ${i===0?'★':''}</label>
+                    <input type="number" id="in${pIdx}" class="w-full text-center text-2xl font-black bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-yellow-500 transition">
                 </div>`;
             }
             document.getElementById('roundCounter').innerText = `Round ${currentRound}/${totalRounds}`;
             document.getElementById('roundMode').innerText = gameState;
             document.getElementById('actionBtn').innerText = gameState === 'BIDDING' ? "CONFIRM BIDS" : "SAVE ROUND";
-            document.getElementById('actionBtn').className = `w-full mt-5 text-black font-black py-4 rounded-2xl ${gameState === 'BIDDING' ? 'bg-yellow-500' : 'bg-green-500'}`;
+            document.getElementById('actionBtn').className = `w-full mt-6 text-black font-black py-5 rounded-2xl shadow-xl transition-all ${gameState === 'BIDDING' ? 'bg-yellow-500' : 'bg-green-500 shadow-green-500/20'}`;
             renderTable();
         }
 
         function renderTable() {
-            document.getElementById('tableHeader').innerHTML = `<th class="p-2 w-8">R</th>` + players.map(p => `<th class="p-2 truncate">${p}</th>`).join('');
+            document.getElementById('tableHeader').innerHTML = `<th class="p-3 w-10">R</th>` + players.map(p => `<th class="p-3 truncate">${p}</th>`).join('');
             const body = document.getElementById('scoreBody');
-            body.innerHTML = scores.map((r, i) => `<tr><td class="bg-slate-50 dark:bg-slate-700 font-bold">${i+1}</td>${r.pts.map(p => `<td class="${p<0?'text-red-500 font-bold':''}">${p.toFixed(1)}</td>`).join('')}</tr>`).join('');
+            body.innerHTML = scores.map((r, i) => `<tr><td class="bg-slate-50 dark:bg-slate-700/50 font-black italic">${i+1}</td>${r.pts.map(p => `<td class="font-bold ${p<0?'text-red-500':''}">${p.toFixed(1)}</td>`).join('')}</tr>`).join('');
             const totals = [0,0,0,0]; scores.forEach(r => r.pts.forEach((p, idx) => totals[idx] += p));
-            document.getElementById('tableFooter').innerHTML = `<td>TTL</td>` + totals.map(t => `<td>${t.toFixed(1)}</td>`).join('');
-        }
-
-        async function saveMatch() {
-            const user = auth.currentUser;
-            if(user) {
-                try {
-                    await db.collection('games').doc(user.uid).set({ players, scores, currentRound, totalRounds, timestamp: Date.now() });
-                } catch(e) { console.error("Firestore Save Error:", e); }
-            }
-        }
-
-        async function loadHistory() {
-            const user = auth.currentUser;
-            if(!user) { alert("Please login to see history!"); return; }
-            const doc = await db.collection('games').doc(user.uid).get();
-            if(doc.exists) {
-                const d = doc.data();
-                players = d.players; scores = d.scores; currentRound = d.currentRound; totalRounds = d.totalRounds;
-                gameState = 'BIDDING'; renderUI(); showPage('page-game');
-            } else { alert("No saved match found."); }
+            document.getElementById('tableFooter').innerHTML = `<td class="p-3">TTL</td>` + totals.map(t => `<td class="p-3">${t.toFixed(1)}</td>`).join('');
         }
 
         function updateLimit(v) { if(parseInt(v) >= currentRound) { totalRounds = parseInt(v); renderUI(); } }
