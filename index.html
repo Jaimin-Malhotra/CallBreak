@@ -3,118 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Callbreak Pro</title>
+    <title>Callbreak Tablet</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script>
-        tailwind.config = { darkMode: 'class' }
-    </script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
     <style>
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
         .page { display: none; }
         .page.active { display: block; }
+        .table-fixed { table-layout: fixed; }
+        th, td { border: 1px solid rgba(156, 163, 175, 0.2); }
     </style>
 </head>
 <body class="transition-colors duration-300 bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-white min-h-screen font-sans">
 
-    <div class="max-w-md mx-auto p-4 pb-20">
-        <header class="flex justify-between items-center py-4 mb-6">
-            <h1 class="text-xl font-black italic text-yellow-500">CALLBREAK <span class="text-slate-400">PRO</span></h1>
+    <div class="max-w-md mx-auto p-4 pb-24">
+        <header class="flex justify-between items-center py-4 mb-4">
+            <h1 class="text-xl font-black italic text-yellow-500">CALLBREAK <span class="text-slate-400">TABLET</span></h1>
             <div class="flex items-center gap-3">
-                <button onclick="toggleTheme()" class="p-2 rounded-full bg-slate-200 dark:bg-slate-800 text-lg">🌓</button>
-                <div id="userAvatar" class="hidden"><img id="userPic" class="w-8 h-8 rounded-full border-2 border-yellow-500"></div>
+                <button onclick="toggleTheme()" class="p-2 rounded-full bg-slate-200 dark:bg-slate-800">🌓</button>
+                <div id="userAvatar" class="hidden"><img id="userPic" onclick="logout()" class="w-8 h-8 rounded-full border-2 border-yellow-500"></div>
             </div>
         </header>
 
         <div id="page-login" class="page active text-center space-y-8 pt-20">
+            <h2 class="text-4xl font-black">Callbreak</h2>
+            <button onclick="login()" class="bg-white text-black font-bold py-4 px-8 rounded-2xl shadow-xl flex items-center mx-auto gap-3">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/pwa/google.svg" class="w-5"> Login with Google
+            </button>
+        </div>
+
+        <div id="page-dashboard" class="page space-y-4">
+            <button onclick="showPage('page-setup')" class="w-full bg-yellow-500 text-black p-6 rounded-3xl font-black text-left shadow-lg">
+                <span class="block text-2xl">NEW MATCH</span>
+            </button>
+            <button onclick="loadHistory()" class="w-full bg-slate-200 dark:bg-slate-800 p-6 rounded-3xl font-bold text-left">
+                <span class="block text-xl">RESUME/HISTORY</span>
+                <p id="histDetail" class="text-xs opacity-50">No recent games found</p>
+            </button>
+        </div>
+
+        <div id="page-setup" class="page bg-white dark:bg-slate-800 p-6 rounded-3xl space-y-4">
+            <h2 class="text-xl font-bold">Player Names</h2>
             <div class="space-y-2">
-                <h2 class="text-4xl font-black">Welcome.</h2>
-                <p class="text-slate-500">Track your Callbreak matches with ease.</p>
+                <input type="text" id="n0" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl" placeholder="Player 1">
+                <input type="text" id="n1" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl" placeholder="Player 2">
+                <input type="text" id="n2" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl" placeholder="Player 3">
+                <input type="text" id="n3" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl" placeholder="Player 4">
             </div>
-            <div class="flex flex-col gap-4 px-6">
-                <button onclick="login()" class="bg-white text-black font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-3">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/pwa/google.svg" class="w-5"> Login with Google
-                </button>
-                <button onclick="showPage('page-setup')" class="text-slate-500 underline text-sm">Continue as Guest</button>
-            </div>
+            <select id="setupRounds" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl">
+                <option value="4">4 Rounds</option><option value="8">8 Rounds</option><option value="12">12 Rounds</option>
+            </select>
+            <button onclick="startMatch()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl">START</button>
         </div>
 
-        <div id="page-dashboard" class="page space-y-6">
-            <h2 class="text-2xl font-bold px-2">Dashboard</h2>
-            <div class="grid grid-cols-1 gap-4">
-                <button onclick="showPage('page-setup')" class="bg-yellow-500 text-black p-6 rounded-3xl font-black text-left shadow-lg">
-                    <span class="block text-3xl">NEW MATCH</span>
-                    <span class="opacity-70 text-sm font-medium">Start a fresh scoring sheet</span>
-                </button>
-                <button onclick="loadHistory()" class="bg-slate-200 dark:bg-slate-800 p-6 rounded-3xl font-bold text-left">
-                    <span class="block text-xl">VIEW HISTORY</span>
-                    <span id="historyStatus" class="opacity-50 text-sm">Last game details</span>
-                </button>
-            </div>
-        </div>
-
-        <div id="page-setup" class="page space-y-6">
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl space-y-4">
-                <h2 class="text-xl font-bold">Match Setup</h2>
-                <div class="space-y-4">
-                    <div>
-                        <label class="text-xs font-bold uppercase opacity-50">Player Names (In playing order)</label>
-                        <input type="text" id="name1" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl mb-2" placeholder="Player 1 Name">
-                        <input type="text" id="name2" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl mb-2" placeholder="Player 2 Name">
-                        <input type="text" id="name3" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl mb-2" placeholder="Player 3 Name">
-                        <input type="text" id="name4" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl mb-2" placeholder="Player 4 Name">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold uppercase opacity-50">Total Rounds</label>
-                        <select id="setupRounds" class="w-full bg-slate-100 dark:bg-slate-700 p-3 rounded-xl">
-                            <option value="4">4 Rounds</option>
-                            <option value="8">8 Rounds</option>
-                            <option value="12">12 Rounds</option>
-                        </select>
-                    </div>
-                </div>
-                <button onclick="startMatch()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl shadow-lg">START MATCH</button>
-            </div>
-        </div>
-
-        <div id="page-game" class="page space-y-6">
-            <div id="adminPanel" class="p-4 rounded-2xl glass flex justify-between items-center text-sm">
+        <div id="page-game" class="page space-y-4">
+            <div class="flex justify-between items-center text-xs font-bold uppercase opacity-60">
                 <span id="roundCounter">Round 1/4</span>
-                <div class="flex items-center gap-2">
-                    <span>Limit:</span>
-                    <select id="gameRoundLimit" onchange="changeLimit(this.value)" class="bg-slate-200 dark:bg-slate-800 rounded px-1">
-                        <option value="4">4</option>
-                        <option value="8">8</option>
-                        <option value="12">12</option>
-                    </select>
-                </div>
+                <select id="gameLimit" onchange="updateLimit(this.value)" class="bg-transparent border-b border-white outline-none">
+                    <option value="4">4</option><option value="8">8</option><option value="12">12</option>
+                </select>
             </div>
 
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 id="roundTitle" class="text-lg font-bold">Place Bids</h2>
-                    <span id="dealerInfo" class="text-[10px] bg-yellow-500/20 text-yellow-600 px-2 py-1 rounded-full uppercase font-black">P1 Starts</span>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="text-center"><label id="label1" class="text-xs opacity-60">P1</label><input type="number" id="v1" class="w-full text-center text-2xl font-bold bg-slate-100 dark:bg-slate-700 p-3 rounded-2xl outline-none ring-yellow-500 focus:ring-2"></div>
-                    <div class="text-center"><label id="label2" class="text-xs opacity-60">P2</label><input type="number" id="v2" class="w-full text-center text-2xl font-bold bg-slate-100 dark:bg-slate-700 p-3 rounded-2xl outline-none ring-yellow-500 focus:ring-2"></div>
-                    <div class="text-center"><label id="label3" class="text-xs opacity-60">P3</label><input type="number" id="v3" class="w-full text-center text-2xl font-bold bg-slate-100 dark:bg-slate-700 p-3 rounded-2xl outline-none ring-yellow-500 focus:ring-2"></div>
-                    <div class="text-center"><label id="label4" class="text-xs opacity-60">P4</label><input type="number" id="v4" class="w-full text-center text-2xl font-bold bg-slate-100 dark:bg-slate-700 p-3 rounded-2xl outline-none ring-yellow-500 focus:ring-2"></div>
-                </div>
-                <p id="errorMsg" class="text-red-500 text-[10px] font-bold text-center mt-3 hidden"></p>
-                <button id="actionBtn" onclick="handleGameStep()" class="w-full mt-6 bg-yellow-500 text-black font-black py-4 rounded-2xl transition">CONFIRM BIDS</button>
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-xl">
+                <h2 id="roundMode" class="text-center font-black text-yellow-500 mb-4 uppercase tracking-widest">BIDDING</h2>
+                <div id="inputGroup" class="grid grid-cols-2 gap-4">
+                    </div>
+                <p id="errorMsg" class="text-red-500 text-[10px] text-center mt-3 hidden"></p>
+                <button id="actionBtn" onclick="handleStep()" class="w-full mt-5 bg-yellow-500 text-black font-black py-4 rounded-2xl">CONFIRM</button>
             </div>
 
-            <div id="gameLeaderboard" class="space-y-2"></div>
+            <div class="overflow-x-auto mt-4 rounded-xl border border-slate-700">
+                <table class="w-full text-center text-[10px] table-fixed bg-white dark:bg-slate-800">
+                    <thead class="bg-slate-100 dark:bg-slate-700">
+                        <tr id="tableHeader"></tr>
+                    </thead>
+                    <tbody id="scoreBody"></tbody>
+                    <tfoot class="font-bold bg-yellow-500 text-black">
+                        <tr id="tableFooter"></tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- CONFIG & STATE ---
         const firebaseConfig = {
             apiKey: "AIzaSyAnh9amE2yARJRZz1px0iLOr2F2zwa1bSU",
             authDomain: "callbreak-tracker-ffe3d.firebaseapp.com",
@@ -127,177 +102,144 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let gameState = 'BIDDING';
-        let currentRound = 1;
-        let totalRounds = 4;
         let players = ["P1", "P2", "P3", "P4"];
-        let scores = [0, 0, 0, 0];
-        let currentBids = [0, 0, 0, 0];
+        let scores = []; // Array of round objects { bids: [], made: [], roundPoints: [] }
+        let totalRounds = 4;
+        let currentRound = 1;
+        let gameState = 'BIDDING'; 
+        let tempBids = [0,0,0,0];
 
-        // --- THEME ---
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
+        function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+        function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
-        // --- NAVIGATION ---
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        }
-
-        // --- AUTH ---
-        function login() {
-            auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e => alert(e.message));
-        }
+        function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        function logout() { if(confirm("Logout?")) auth.signOut().then(()=>location.reload()); }
 
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('userAvatar').classList.remove('hidden');
                 document.getElementById('userPic').src = user.photoURL;
                 showPage('page-dashboard');
+                checkRecentHistory(user.uid);
             }
         });
 
-        // --- GAME LOGIC ---
+        async function checkRecentHistory(uid) {
+            const doc = await db.collection('games').doc(uid).get();
+            if(doc.exists) document.getElementById('histDetail').innerText = "Last game: Round " + doc.data().currentRound;
+        }
+
         function startMatch() {
-            for(let i=1; i<=4; i++) {
-                const name = document.getElementById('name'+i).value.trim();
-                if(name) players[i-1] = name;
+            for(let i=0; i<4; i++) {
+                const n = document.getElementById('n'+i).value.trim();
+                if(n) players[i] = n;
             }
             totalRounds = parseInt(document.getElementById('setupRounds').value);
-            document.getElementById('gameRoundLimit').value = totalRounds;
-            resetGameState();
-            showPage('page-game');
-            updateUI();
-        }
-
-        function resetGameState() {
-            scores = [0,0,0,0];
+            scores = [];
             currentRound = 1;
             gameState = 'BIDDING';
+            renderUI();
+            showPage('page-game');
         }
 
-        function handleGameStep() {
-            const v = [1,2,3,4].map(n => parseInt(document.getElementById('v'+n).value) || 0);
-            const err = document.getElementById('errorMsg');
-            const sum = v.reduce((a,b) => a+b, 0);
+        function handleStep() {
+            const starterIdx = (currentRound - 1) % 4;
+            const vals = [];
+            // Collect rotated inputs back to 0-3 index
+            for(let i=0; i<4; i++) {
+                const rotatedIdx = (starterIdx + i) % 4;
+                vals[rotatedIdx] = parseInt(document.getElementById('in'+rotatedIdx).value) || 0;
+            }
 
-            if (gameState === 'BIDDING') {
-                if (sum <= 8) {
-                    err.innerText = `RE-DEAL! Total bids ${sum} is <= 8.`;
-                    err.classList.remove('hidden');
-                    return;
-                }
-                currentBids = v;
+            const sum = vals.reduce((a,b)=>a+b, 0);
+            const err = document.getElementById('errorMsg');
+
+            if(gameState === 'BIDDING') {
+                if(sum <= 8) { err.innerText = `CANCELLED: Sum ${sum} <= 8`; err.classList.remove('hidden'); return; }
+                tempBids = vals;
                 gameState = 'SCORING';
                 err.classList.add('hidden');
             } else {
-                if (sum !== 13) {
-                    err.innerText = `ERROR! Total hands must be 13 (You entered ${sum}).`;
-                    err.classList.remove('hidden');
-                    return;
+                if(sum !== 13) { err.innerText = `ERROR: Sum must be 13 (Got ${sum})`; err.classList.remove('hidden'); return; }
+                
+                const roundPoints = [];
+                for(let i=0; i<4; i++) {
+                    roundPoints[i] = (vals[i] >= tempBids[i]) ? (tempBids[i] + (vals[i] - tempBids[i]) * 0.1) : (-tempBids[i]);
                 }
-                calculateScores(v);
-                if (currentRound >= totalRounds) {
-                    finishGame();
-                    return;
-                }
+                
+                scores.push({ bids: [...tempBids], made: vals, pts: roundPoints });
+                saveMatch();
+                
+                if(currentRound >= totalRounds) { alert("Match Over!"); showPage('page-dashboard'); return; }
                 currentRound++;
                 gameState = 'BIDDING';
-                err.classList.add('hidden');
             }
-            updateUI();
+            renderUI();
         }
 
-        function calculateScores(hands) {
+        function renderUI() {
+            const starterIdx = (currentRound - 1) % 4;
+            const group = document.getElementById('inputGroup');
+            group.innerHTML = '';
+            
+            // Generate rotated inputs: Starter is ALWAYS first
             for(let i=0; i<4; i++) {
-                if(hands[i] >= currentBids[i]) {
-                    scores[i] += currentBids[i] + (hands[i] - currentBids[i]) * 0.1;
-                } else {
-                    scores[i] -= currentBids[i];
-                }
+                const pIdx = (starterIdx + i) % 4;
+                group.innerHTML += `
+                    <div class="text-center">
+                        <label class="text-[10px] font-bold block truncate ${i===0 ? 'text-yellow-500' : 'opacity-50'}">${players[pIdx]}</label>
+                        <input type="number" id="in${pIdx}" class="w-full text-center text-xl font-bold bg-slate-100 dark:bg-slate-700 p-3 rounded-xl outline-none ring-yellow-500 focus:ring-2">
+                    </div>`;
             }
-            saveToFirebase();
-        }
 
-        function updateUI() {
-            // Update Round Info
             document.getElementById('roundCounter').innerText = `Round ${currentRound}/${totalRounds}`;
-            document.getElementById('roundTitle').innerText = gameState === 'BIDDING' ? "Place Bids" : "Enter Results";
-            
-            // Rotation logic: Who starts this round?
-            const starterIndex = (currentRound - 1) % 4;
-            document.getElementById('dealerInfo').innerText = `${players[starterIndex]} STARTS`;
+            document.getElementById('roundMode').innerText = gameState;
+            document.getElementById('actionBtn').innerText = gameState === 'BIDDING' ? "CONFIRM BIDS" : "SAVE RESULTS";
+            document.getElementById('actionBtn').className = `w-full mt-5 text-black font-black py-4 rounded-2xl ${gameState === 'BIDDING' ? 'bg-yellow-500' : 'bg-green-500'}`;
 
-            // Update Labels
-            players.forEach((name, i) => {
-                document.getElementById('label'+(i+1)).innerText = name;
-            });
-
-            const btn = document.getElementById('actionBtn');
-            btn.innerText = gameState === 'BIDDING' ? "CONFIRM BIDS" : "SAVE ROUND";
-            btn.className = `w-full mt-6 text-black font-black py-4 rounded-2xl transition ${gameState === 'BIDDING' ? 'bg-yellow-500' : 'bg-green-500'}`;
-            
-            resetInputs();
-            renderLeaderboard();
+            renderTable();
         }
 
-        function renderLeaderboard() {
-            document.getElementById('gameLeaderboard').innerHTML = scores.map((s, i) => `
-                <div class="flex justify-between items-center bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
-                    <span class="font-bold">${players[i]}</span>
-                    <span class="text-yellow-500 font-black text-xl">${s.toFixed(1)}</span>
-                </div>
+        function renderTable() {
+            document.getElementById('tableHeader').innerHTML = `<th class="p-2">R</th>` + players.map(p => `<th class="p-2 truncate">${p}</th>`).join('');
+            
+            const body = document.getElementById('scoreBody');
+            body.innerHTML = scores.map((r, i) => `
+                <tr class="border-b border-slate-700/50">
+                    <td class="bg-slate-100 dark:bg-slate-800 font-bold">${i+1}</td>
+                    ${r.pts.map(p => `<td class="${p<0?'text-red-500':''}">${p.toFixed(1)}</td>`).join('')}
+                </tr>
             `).join('');
+
+            const totals = [0,0,0,0];
+            scores.forEach(r => r.pts.forEach((p, idx) => totals[idx] += p));
+            document.getElementById('tableFooter').innerHTML = `<td>TTL</td>` + totals.map(t => `<td>${t.toFixed(1)}</td>`).join('');
         }
 
-        function changeLimit(val) {
-            const newLimit = parseInt(val);
-            if(newLimit < currentRound) {
-                alert("Cannot set limit lower than current round!");
-                document.getElementById('gameRoundLimit').value = totalRounds;
-                return;
-            }
-            totalRounds = newLimit;
-            updateUI();
-        }
-
-        function resetInputs() { [1,2,3,4].forEach(n => document.getElementById('v'+n).value = ""); }
-
-        async function saveToFirebase() {
+        async function saveMatch() {
             const user = auth.currentUser;
-            if (user) {
-                await db.collection('history').doc(user.uid).set({
-                    players, scores, currentRound, totalRounds, timestamp: Date.now()
-                });
+            if(user) {
+                await db.collection('games').doc(user.uid).set({ players, scores, currentRound, totalRounds, timestamp: Date.now() });
             }
         }
 
         async function loadHistory() {
             const user = auth.currentUser;
             if(!user) return;
-            const doc = await db.collection('history').doc(user.uid).get();
+            const doc = await db.collection('games').doc(user.uid).get();
             if(doc.exists) {
-                const data = doc.data();
-                players = data.players;
-                scores = data.scores;
-                currentRound = data.currentRound;
-                totalRounds = data.totalRounds;
+                const d = doc.data();
+                players = d.players; scores = d.scores; currentRound = d.currentRound; totalRounds = d.totalRounds;
+                gameState = 'BIDDING';
+                renderUI();
                 showPage('page-game');
-                updateUI();
-            } else {
-                alert("No history found!");
-            }
+            } else { alert("No game found."); }
         }
 
-        function finishGame() {
-            alert("Match Completed! Data Saved.");
-            showPage('page-dashboard');
+        function updateLimit(v) { 
+            if(parseInt(v) < currentRound) { alert("Too low!"); return; }
+            totalRounds = parseInt(v); 
+            renderUI(); 
         }
     </script>
 </body>
