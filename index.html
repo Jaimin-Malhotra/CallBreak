@@ -15,16 +15,25 @@
         .page.active { display: block; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
         .modal.active { display: flex; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body class="transition-colors duration-300 bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-white min-h-screen font-sans">
 
     <div id="winnerModal" class="modal">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-sm p-8 rounded-3xl text-center shadow-2xl border border-yellow-500/30">
-            <h2 class="text-5xl mb-4">👑</h2>
-            <h3 class="text-2xl font-black text-yellow-500 uppercase italic" id="wName">WINNER!</h3>
-            <div id="finalScores" class="space-y-3 my-6 text-left bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl"></div>
-            <button onclick="location.reload()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl shadow-lg active:scale-95 transition">EXIT TO MENU</button>
+        <div class="bg-white dark:bg-slate-800 w-full max-w-sm p-8 rounded-[2.5rem] text-center shadow-2xl border border-yellow-500/30">
+            <h2 class="text-6xl mb-4">👑</h2>
+            <h3 class="text-2xl font-black text-yellow-500 uppercase italic tracking-tighter" id="wName">WINNER!</h3>
+            <div id="finalScores" class="space-y-3 my-6 text-left bg-slate-100 dark:bg-slate-900/50 p-6 rounded-3xl"></div>
+            <button onclick="location.reload()" class="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-lg active:scale-95 transition">EXIT TO MENU</button>
+        </div>
+    </div>
+
+    <div id="historyModal" class="modal">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl border border-slate-700">
+            <h3 class="text-xl font-bold mb-4 text-yellow-500 italic">Match Details</h3>
+            <div id="histContent" class="space-y-3 mb-6"></div>
+            <button onclick="document.getElementById('historyModal').classList.remove('active')" class="w-full bg-slate-200 dark:bg-slate-700 py-4 rounded-2xl font-bold">CLOSE</button>
         </div>
     </div>
 
@@ -33,7 +42,7 @@
             <h1 class="text-xl font-black italic text-yellow-500 uppercase tracking-tighter">CALLBREAK <span class="text-slate-400">PRO</span></h1>
             <div class="flex items-center gap-3">
                 <button onclick="toggleTheme()" class="p-2 rounded-full bg-slate-200 dark:bg-slate-800">🌓</button>
-                <div id="userAvatar" class="hidden"><img id="userPic" onclick="logout()" class="w-10 h-10 rounded-full border-2 border-yellow-500 cursor-pointer shadow-lg"></div>
+                <div id="userAvatar" class="hidden"><img id="userPic" onclick="logout()" class="w-10 h-10 rounded-full border-2 border-yellow-500 cursor-pointer"></div>
             </div>
         </header>
 
@@ -49,24 +58,24 @@
         </div>
 
         <div id="page-dashboard" class="page space-y-4">
-            <button onclick="showPage('page-setup')" class="w-full bg-yellow-500 text-black p-8 rounded-[2rem] font-black text-left shadow-xl active:scale-95 transition">
+            <button onclick="showPage('page-setup')" class="w-full bg-yellow-500 text-black p-8 rounded-[2.5rem] font-black text-left shadow-xl active:scale-95 transition">
                 <span class="block text-3xl italic uppercase">NEW MATCH</span>
             </button>
-            <div class="bg-slate-200 dark:bg-slate-800 p-6 rounded-[2rem] space-y-4 min-h-[200px]">
-                <h3 class="font-bold text-xs uppercase opacity-50 px-2 tracking-widest">History</h3>
+            <div class="bg-slate-200 dark:bg-slate-800 p-6 rounded-[2.5rem] space-y-4">
+                <h3 class="font-bold text-xs uppercase opacity-40 px-2 tracking-widest">History Log</h3>
                 <div id="historyList" class="space-y-2">
-                    <p class="text-[10px] italic opacity-40 px-2">No data yet.</p>
+                    <p class="text-[10px] italic opacity-30 px-2">Matches will appear here.</p>
                 </div>
             </div>
         </div>
 
-        <div id="page-setup" class="page bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-2xl space-y-6">
-            <h2 class="text-2xl font-black italic uppercase text-yellow-500">Setup</h2>
+        <div id="page-setup" class="page bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-2xl space-y-6">
+            <h2 class="text-2xl font-black italic uppercase text-yellow-500">Match Setup</h2>
             <div class="space-y-3">
-                <input type="text" id="n0" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 1">
-                <input type="text" id="n1" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 2">
-                <input type="text" id="n2" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 3">
-                <input type="text" id="n3" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 4">
+                <input type="text" id="n0" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 1 Name">
+                <input type="text" id="n1" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 2 Name">
+                <input type="text" id="n2" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 3 Name">
+                <input type="text" id="n3" class="w-full bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500" placeholder="Player 4 Name">
             </div>
             <div>
                 <label class="text-[10px] font-black uppercase opacity-40 ml-2 mb-1 block">Rounds</label>
@@ -87,18 +96,18 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-2xl">
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-700">
                 <h2 id="roundMode" class="text-center font-black text-yellow-500 mb-6 uppercase tracking-[0.2em] text-xs">BIDDING</h2>
                 <div id="inputGroup" class="grid grid-cols-2 gap-4"></div>
-                <p id="errorMsg" class="text-red-500 text-[10px] text-center mt-4 font-black hidden uppercase"></p>
-                <button id="actionBtn" onclick="handleStep()" class="w-full mt-6 bg-yellow-500 text-black font-black py-5 rounded-2xl transition-all active:scale-95 text-lg shadow-xl shadow-yellow-500/20">CONFIRM</button>
+                <p id="errorMsg" class="text-red-500 text-[10px] text-center mt-4 font-black hidden uppercase italic"></p>
+                <button id="actionBtn" onclick="handleStep()" class="w-full mt-6 bg-yellow-500 text-black font-black py-5 rounded-2xl shadow-xl transition-all active:scale-95 text-lg">CONFIRM</button>
             </div>
 
-            <div class="mt-6">
+            <div class="mt-4">
                 <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
                     <table class="w-full text-center text-[11px] table-fixed bg-white dark:bg-slate-800">
-                        <thead class="bg-slate-50 dark:bg-slate-700/50">
-                            <tr id="tableHeader" class="text-slate-400"></tr>
+                        <thead class="bg-slate-50 dark:bg-slate-700/50 text-slate-400">
+                            <tr id="tableHeader"></tr>
                         </thead>
                         <tbody id="scoreBody"></tbody>
                         <tfoot class="font-black bg-yellow-500 text-black">
@@ -126,7 +135,14 @@
         let players = ["P1", "P2", "P3", "P4"];
         let scores = []; let totalRounds = 4; let currentRound = 1; let gameState = 'BIDDING'; let tempBids = [0,0,0,0];
 
-        function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+        function toggleTheme() { 
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
         function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
         function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         function logout() { if(confirm("Logout?")) auth.signOut().then(()=>location.reload()); }
@@ -142,23 +158,33 @@
 
         async function fetchHistory(uid) {
             const list = document.getElementById('historyList');
-            const snap = await db.collection('user_history').doc(uid).get();
-            if(snap.exists) {
-                const logs = snap.data().matches || [];
-                if(logs.length > 0) {
-                    list.innerHTML = logs.reverse().slice(0, 5).map(m => `
-                        <div class="bg-white dark:bg-slate-700/50 p-4 rounded-2xl flex justify-between items-center text-[10px] font-bold border border-slate-100 dark:border-slate-600">
-                            <div class="flex flex-col"><span class="text-yellow-500 uppercase">${m.winner} WINS</span><span class="opacity-40 font-medium">${m.date}</span></div>
-                            <div class="text-right text-[9px] opacity-60">Sum: ${m.totalScore}</div>
-                        </div>`).join('');
-                }
+            const snap = await db.collection('match_history').where('uid', '==', uid).orderBy('timestamp', 'desc').limit(10).get();
+            if(!snap.empty) {
+                list.innerHTML = snap.docs.map(doc => {
+                    const m = doc.data();
+                    return `<div onclick='viewHistDetail(${JSON.stringify(m)})' class="bg-white dark:bg-slate-700/50 p-4 rounded-2xl flex justify-between items-center text-[10px] font-bold border border-slate-100 dark:border-slate-600 active:scale-95 transition cursor-pointer">
+                        <div class="flex flex-col"><span class="text-yellow-500 uppercase">${m.winner} WON</span><span class="opacity-40 font-medium">${m.date}</span></div>
+                        <div class="text-right text-[9px] opacity-60">View Details →</div>
+                    </div>`;
+                }).join('');
             }
+        }
+
+        function viewHistDetail(match) {
+            const content = document.getElementById('histContent');
+            content.innerHTML = match.players.map((p, i) => `
+                <div class="flex justify-between items-center p-3 bg-slate-100 dark:bg-slate-900 rounded-xl">
+                    <span class="font-bold uppercase tracking-tighter text-xs opacity-70">${p}</span>
+                    <span class="font-black text-yellow-500">${match.totals[i]}</span>
+                </div>`).join('');
+            document.getElementById('historyModal').classList.add('active');
         }
 
         function startMatch() {
             for(let i=0; i<4; i++) players[i] = document.getElementById('n'+i).value.trim() || `P${i+1}`;
             totalRounds = parseInt(document.getElementById('setupRounds').value);
             scores = []; currentRound = 1; gameState = 'BIDDING';
+            document.getElementById('gameLimit').value = totalRounds;
             renderUI(); showPage('page-game');
         }
 
@@ -174,11 +200,14 @@
 
             if(gameState === 'BIDDING') {
                 if(sum <= 8) { err.innerText = `⚠️ Sum ${sum} <= 8 - Re-deal!`; err.classList.remove('hidden'); return; }
-                tempBids = vals; gameState = 'SCORING'; err.classList.add('hidden');
+                tempBids = vals; 
+                gameState = 'SCORING'; 
+                err.classList.add('hidden'); // Clear error when moving to scoring
             } else {
                 if(sum !== 13) { err.innerText = `⚠️ Total must be 13! (You: ${sum})`; err.classList.remove('hidden'); return; }
                 const pts = vals.map((v, i) => (v >= tempBids[i]) ? (tempBids[i] + (v - tempBids[i]) * 0.1) : (-tempBids[i]));
                 scores.push({ pts });
+                err.classList.add('hidden'); // Clear error after successful save
                 if(currentRound >= totalRounds) { finalizeGame(); return; }
                 currentRound++; gameState = 'BIDDING';
             }
@@ -187,19 +216,24 @@
 
         async function finalizeGame() {
             const totals = [0,0,0,0]; scores.forEach(r => r.pts.forEach((p, idx) => totals[idx] += p));
+            const formattedTotals = totals.map(t => t.toFixed(1));
             let winIdx = totals.indexOf(Math.max(...totals));
             
             if(auth.currentUser) {
-                const uid = auth.currentUser.uid;
-                const matchData = { winner: players[winIdx], totalScore: totals[winIdx].toFixed(1), date: new Date().toLocaleDateString(), timestamp: Date.now() };
-                const ref = db.collection('user_history').doc(uid);
-                await ref.set({ matches: firebase.firestore.FieldValue.arrayUnion(matchData) }, { merge: true });
+                await db.collection('match_history').add({
+                    uid: auth.currentUser.uid,
+                    winner: players[winIdx],
+                    players: players,
+                    totals: formattedTotals,
+                    date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    timestamp: Date.now()
+                });
             }
 
             document.getElementById('wName').innerText = `${players[winIdx]} WINS!`;
             document.getElementById('finalScores').innerHTML = players.map((p, i) => `
                 <div class="flex justify-between font-bold text-sm">
-                    <span class="opacity-60 uppercase tracking-tighter">${p}</span><span>${totals[i].toFixed(1)}</span>
+                    <span class="opacity-60 uppercase tracking-tighter">${p}</span><span>${formattedTotals[i]}</span>
                 </div>`).join('');
             document.getElementById('winnerModal').classList.add('active');
         }
@@ -208,31 +242,39 @@
             const sIdx = (currentRound - 1) % 4;
             const group = document.getElementById('inputGroup');
             group.innerHTML = '';
+            
             for(let i=0; i<4; i++) {
                 const pIdx = (sIdx + i) % 4;
-                const bidTxt = gameState === 'SCORING' ? `<span class="text-yellow-500 ml-1">(${tempBids[pIdx]})</span>` : '';
+                const bidTxt = gameState === 'SCORING' ? `<span class="text-yellow-500 ml-1">(Bid: ${tempBids[pIdx]})</span>` : '';
                 group.innerHTML += `<div class="text-center">
                     <label class="text-[10px] font-black block truncate mb-1 ${i===0 ? 'text-yellow-500' : 'opacity-30'}">${players[pIdx]} ${i===0?'★':''}${bidTxt}</label>
-                    <input type="number" id="in${pIdx}" class="w-full text-center text-2xl font-black bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500 transition">
+                    <input type="number" id="in${pIdx}" class="w-full text-center text-2xl font-black bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-yellow-500 transition border-2 border-transparent focus:border-yellow-500/50">
                 </div>`;
             }
+
             document.getElementById('roundCounter').innerText = `Round ${currentRound}/${totalRounds}`;
             document.getElementById('roundMode').innerText = gameState;
-            document.getElementById('actionBtn').innerText = gameState === 'BIDDING' ? "CONFIRM" : "SAVE";
-            document.getElementById('actionBtn').className = `w-full mt-6 text-black font-black py-5 rounded-2xl transition-all ${gameState === 'BIDDING' ? 'bg-yellow-500' : 'bg-green-500 shadow-green-500/20'}`;
+            document.getElementById('actionBtn').innerText = gameState === 'BIDDING' ? "CONFIRM BIDS" : "SAVE ROUND";
+            document.getElementById('actionBtn').className = `w-full mt-6 text-black font-black py-5 rounded-2xl transition-all ${gameState === 'BIDDING' ? 'bg-yellow-500' : 'bg-green-500 shadow-xl shadow-green-500/20'}`;
+            
             renderTable();
         }
 
         function renderTable() {
             document.getElementById('tableHeader').innerHTML = `<th class="p-3 w-10">R</th>` + players.map(p => `<th class="p-3 truncate">${p}</th>`).join('');
             const body = document.getElementById('scoreBody');
-            body.innerHTML = scores.map((r, i) => `<tr><td class="bg-slate-50 dark:bg-slate-700/50 font-black italic">${i+1}</td>${r.pts.map(p => `<td class="font-bold ${p<0?'text-red-500':''}">${p.toFixed(1)}</td>`).join('')}</tr>`).join('');
+            body.innerHTML = scores.map((r, i) => `<tr class="border-b border-slate-50 dark:border-slate-700/30"><td class="bg-slate-50 dark:bg-slate-700 font-black italic">${i+1}</td>${r.pts.map(p => `<td class="font-bold ${p<0?'text-red-500':''}">${p.toFixed(1)}</td>`).join('')}</tr>`).join('');
             const totals = [0,0,0,0]; scores.forEach(r => r.pts.forEach((p, idx) => totals[idx] += p));
             document.getElementById('tableFooter').innerHTML = `<td class="p-3">TTL</td>` + totals.map(t => `<td class="p-3">${t.toFixed(1)}</td>`).join('');
+            
+            // Clear inputs for the next entry
             [0,1,2,3].forEach(n => { if(document.getElementById('in'+n)) document.getElementById('in'+n).value = ""; });
         }
 
-        function updateLimit(v) { if(parseInt(v) >= currentRound) { totalRounds = parseInt(v); renderUI(); } }
+        function updateLimit(v) { 
+            const newLim = parseInt(v);
+            if(newLim >= currentRound) { totalRounds = newLim; renderUI(); }
+        }
     </script>
 </body>
 </html>
